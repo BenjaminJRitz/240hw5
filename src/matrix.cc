@@ -8,9 +8,7 @@ Matrix::Matrix(unsigned int rows, unsigned int cols) :
   assert(rows > 0);  // assert preconditions are true  
   assert(cols > 0);  // assert preconditions are true
 
-  m_ = new double *[rows_];  // create array of double pointers
-  for (unsigned int i = 0; i < rows_; ++i)
-    m_[i] = new double[cols_];  // create array of doubles
+
 }  // Ending bracket for method Matrix
 
 Matrix::Matrix(const Matrix& that) {
@@ -18,7 +16,7 @@ Matrix::Matrix(const Matrix& that) {
   cols_ = that.getCols();
   m_ = new double *[rows_];  // create array of double pointers
   for (unsigned int i = 0; i < rows_; ++i)
-    m_[i] = new double[cols_];  // create array of doubles
+    m_[i] = new double [cols_];  // create array of doubles
 
   for (unsigned int i = 0; i < rows_; ++i) {
     for (unsigned int j = 0; j < cols_; ++j) {
@@ -31,7 +29,7 @@ Matrix::~Matrix() {
   for (unsigned int i = 0; i < this->rows_; ++i) {
     delete[] this->m_[i];
   }  // Ending bracket for for loop
-  delete[] this->m_;
+  delete[] m_;
 }  // Ending bracket for deconstructor
 
 double Matrix::Get(unsigned int row, unsigned int col) const {
@@ -39,32 +37,53 @@ double Matrix::Get(unsigned int row, unsigned int col) const {
 }  // Ending bracket for method Get
 
 const Matrix& Matrix::operator=(const Matrix& rhs) {
+this->rows_ = rhs.rows_;
+this->cols_ = rhs.cols_;
 
- 
+if (this->m_) {
+  for (unsigned int i = 0; i < this->rows_; ++i) {
+    delete[] this->m_[i];
+  }  // Ending bracket for for loop
+  delete[] m_;
+}  // Ending bracket for if statement
+
+  m_ = new double *[rows_];
+  for (unsigned int i = 0; i < rows_; ++i) {
+    m_[i] = new double[cols_];
+  }  // Ending bracket for for loop;
+
+  for (unsigned int i = 0; i < rows_; ++i) {
+    for (unsigned int j = 0; j < cols_; ++j) {
+      this->m_[i][j] = rhs.Get(i,j);
+    }  // Ending bracket for inner for loop
+  }  // Ending bracket for outer for loop
 return *this;
-
 }  // Ending bracket for method operator=
 
 const Matrix& Matrix::operator*=(double rhs) {
-
-  for (unsigned int i = 0; i < this->rows_; ++i) {
-    for (unsigned int j = 0; j < this->cols_; ++j) {
-      this->m_[i][j] = ((this->m_[i][j])* rhs);
-    }
-  }
+  for (unsigned int i = 0; i < rows_; ++i) {
+    for (unsigned int j = 0; j < cols_; ++j) {
+      this->m_[i][j] *= rhs;
+    }  // Ending bracket for inner for loop
+  }  // Ending bracket for outer loop
   return *this;
-}  // Ending bracket for operator*=
+}  // Ending bracket for method operator*=
 
 const Matrix Matrix::operator+(const Matrix& rhs) const {
-  Matrix copy = Matrix(rhs.getRows(), rhs.getCols());
+  Matrix ret;
+  ret.cols_ = cols_;
+  ret.rows_ = rows_;
 
-  for (unsigned int i = 0; i < rhs.getRows(); ++i) {
-    for (unsigned int j = 0; j < rhs.getCols(); ++i) {
-      copy.m_[i][j] = ( (this->m_[i][j]) + (rhs.m_[i][j]) );
-    }  // ending bracket for inner for loop
+  for (unsigned int i = 0; i < ret.rows_; ++i) {
+    for (unsigned int j = 0; j < ret.cols_; ++j) {
+      ret.m_[i][j] = ( (this->m_[i][j]) + (rhs.m_[i][j]) );
+    }  // Ending bracket for inner for loop
   }  // Ending bracket for outer for loop
-  return copy;
+  return ret;
 }  // Ending bracket for method operator+
+
+
+
 
 unsigned int const Matrix::getRows() const {
   return this->rows_;
