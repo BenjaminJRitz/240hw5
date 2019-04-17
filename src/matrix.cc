@@ -74,9 +74,15 @@ const Matrix Matrix::operator+(const Matrix& rhs) const {
   ret.cols_ = cols_;
   ret.rows_ = rows_;
 
+  ret.m_ = new double *[rows_];
+    for (unsigned int i = 0; i < rows_; ++i) {
+      ret.m_[i] = new double[cols_];
+    }  // Ending bracket for for loop
+
+
   for (unsigned int i = 0; i < ret.rows_; ++i) {
     for (unsigned int j = 0; j < ret.cols_; ++j) {
-      ret.m_[i][j] = ( (this->m_[i][j]) + (rhs.m_[i][j]) );
+      ret.m_[i][j] = ( (this->Get(i,j)) + (rhs.Get(i,j)) );
     }  // Ending bracket for inner for loop
   }  // Ending bracket for outer for loop
   return ret;
