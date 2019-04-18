@@ -1,4 +1,6 @@
-
+// Copyright 2019 <Benjamin Ritz>
+#ifndef INC_MATRIX_H  // NOLINT
+#define INC_MATRIX_H  // NOLINT
 #include <cassert>
 // using assert
 
@@ -9,7 +11,7 @@ class Matrix {
  public:
   friend class MatrixTester;
 
-  Matrix(); // for testing, useless in practice
+  Matrix();  // for testing, useless in practice
   Matrix(unsigned int rows, unsigned int cols);
 
   /* Copy Constructor: 2 Points
@@ -59,7 +61,8 @@ class Matrix {
   unsigned int const getCols() const;
 
  private:
-   double **m_;
-   unsigned int rows_;
-   unsigned int cols_;
+  double **m_;
+  unsigned int rows_;
+  unsigned int cols_;
 };
+#endif // NOLINT
